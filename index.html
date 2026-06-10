@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HSC Countdown</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 1rem;
+  }
+  .wrap { text-align: center; width: 100%; }
+  .label { font-size: 12px; color: #888; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+  .title { font-size: 18px; font-weight: 500; color: #1a1a1a; margin-bottom: 1.25rem; }
+  .boxes { display: flex; justify-content: center; gap: 10px; margin-bottom: 1rem; flex-wrap: wrap; }
+  .box { background: #f5f5f5; border-radius: 12px; padding: 12px 16px; min-width: 70px; }
+  .num { font-size: 32px; font-weight: 500; color: #1a1a1a; line-height: 1; }
+  .unit { font-size: 11px; color: #888; margin-top: 5px; letter-spacing: 0.05em; }
+  .date-line { font-size: 12px; color: #aaa; margin-bottom: 1rem; }
+  .bar-wrap { max-width: 320px; margin: 0 auto; }
+  .bar-bg { background: #eee; border-radius: 99px; height: 5px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 99px; background: #1D9E75; }
+  .pct-row { display: flex; justify-content: space-between; font-size: 11px; color: #aaa; margin-top: 5px; }
+  @media (prefers-color-scheme: dark) {
+    body { background: transparent; }
+    .title { color: #f0f0f0; }
+    .box { background: #2a2a2a; }
+    .num { color: #f0f0f0; }
+    .bar-bg { background: #333; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="label">countdown to</p>
+  <p class="title">📚 HSC পরীক্ষা ২০২৭</p>
+  <div class="boxes">
+    <div class="box"><div class="num" id="days">--</div><div class="unit">days</div></div>
+    <div class="box"><div class="num" id="hours">--</div><div class="unit">hours</div></div>
+    <div class="box"><div class="num" id="minutes">--</div><div class="unit">minutes</div></div>
+    <div class="box"><div class="num" id="seconds">--</div><div class="unit">seconds</div></div>
+  </div>
+  <p class="date-line">🗓️ Target: 6 June 2027</p>
+  <div class="bar-wrap">
+    <div class="bar-bg"><div class="bar-fill" id="bar" style="width:0%"></div></div>
+    <div class="pct-row"><span id="pct">0% elapsed</span><span id="left">-- days left</span></div>
+  </div>
+</div>
+<script>
+  const target = new Date('2027-06-06T00:00:00');
+  const start = new Date('2026-01-01T00:00:00');
+  function update() {
+    const now = new Date();
+    const diff = target - now;
+    if (diff <= 0) return;
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('days').textContent = d;
+    document.getElementById('hours').textContent = String(h).padStart(2,'0');
+    document.getElementById('minutes').textContent = String(m).padStart(2,'0');
+    document.getElementById('seconds').textContent = String(s).padStart(2,'0');
+    const pct = Math.min(100, ((now - start) / (target - start)) * 100);
+    document.getElementById('bar').style.width = pct.toFixed(1) + '%';
+    document.getElementById('pct').textContent = pct.toFixed(0) + '% elapsed';
+    document.getElementById('left').textContent = d + ' days left';
+  }
+  update();
+  setInterval(update, 1000);
+</script>
+</body>
+</html>
